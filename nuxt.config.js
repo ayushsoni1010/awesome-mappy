@@ -54,6 +54,7 @@ export default {
   publicRuntimeConfig: {
     APPLICATION_SECRET: process.env.APPLICATION_ID,
     ADMIN_SECRET: process.env.ADMIN_API_KEY,
+    MAPBOX_SECRET: process.env.MAPBOX_PUBLIC_KEY,
   },
 
   env: {
