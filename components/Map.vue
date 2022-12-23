@@ -15,19 +15,21 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import mapboxgl, { LngLatLike, Map, Marker, Popup } from "mapbox-gl";
 import { SearchResults } from "algoliasearch-helper";
-import { getAlgoliaHelper } from "../services/algolia";
-import MapStore from "../store/MapStore";
-import MapPopup from "./MapPopup.vue";
+import { getAlgoliaHelper } from "@/services/algolia";
+import MapStore from "@/store/MapStore";
+import MapPopup from "@/components/MapPopup.vue";
 
 export default defineComponent({
-  name: "RefinementList",
+  name: "MapBox",
 
   components: {
     MapPopup,
   },
+
   provide() {
     mapboxgl.accessToken = this.$config.MAPBOX_SECRET;
   },
+
   setup() {
     const algoliaHelper = getAlgoliaHelper();
 
@@ -39,10 +41,7 @@ export default defineComponent({
     let lastClickedMarker: Element;
 
     const markers: Marker[] = [];
-    console.log(hits, 444);
     const popup: Popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
       offset: 12,
       maxWidth: "200px",
     });
@@ -50,7 +49,7 @@ export default defineComponent({
     watch(
       () => MapStore.getState().currentObjectID,
       (currentObjectID) => {
-        const hit = hits.find((hit: any) => hit.objectID === currentObjectID);
+        const hit = hits.find((hit: any) => hit.id === currentObjectID);
         onMarkerClick(hit.marker, hit);
       }
     );
@@ -59,7 +58,7 @@ export default defineComponent({
       map.flyTo({
         center: marker.getLngLat(),
         zoom: 15,
-        offset: [0, -100],
+        offset: [0, -700],
       });
     };
 
@@ -118,7 +117,8 @@ export default defineComponent({
 
     const onMarkerClick = (marker: Marker, hit: any) => {
       currentPopupItem.value = hit;
-      MapStore.updateObjectID(hit.objectID);
+      MapStore.updateObjectID(hit.id);
+
       updateMarkerState(marker);
       flyToMarker(marker);
       updatePopup(marker);
@@ -133,8 +133,9 @@ export default defineComponent({
     onMounted(() => {
       map = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mapbox/streets-v11?optimize=true",
-        zoom: -5,
+        style: "mapbox://styles/swadon/ckkvdmhh735l418mhd4re0bse",
+        zoom: 15,
+        center: [78.635735, 22.554967],
         scrollZoom: true,
       });
 
@@ -161,6 +162,11 @@ export default defineComponent({
 </script>
 
 <style lang="css">
+.mapboxgl-canvas:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
 .mapboxgl-popup-content {
   border-radius: 0.75rem;
   padding: 1rem;
@@ -177,10 +183,14 @@ export default defineComponent({
 }
 
 .mapboxgl-ctrl-group button {
-  transition-property: background-color, border-color, color, fill, stroke;
   width: 2rem;
   height: 2rem;
   border-radius: 0.375rem;
+}
+
+.mapboxgl-ctrl-group button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .mapboxgl-ctrl-group button:focus:first-child,
@@ -190,23 +200,23 @@ export default defineComponent({
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out .mapboxgl-ctrl-icon {
-  background-image: url("../assets/images/icons/minus.svg");
+  background-image: url("@/assets/images/icons/minus.svg");
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in .mapboxgl-ctrl-icon {
-  background-image: url("../assets/images/icons/plus.svg");
+  background-image: url("@/assets/images/icons/plus.svg");
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-geolocate .mapboxgl-ctrl-icon {
-  background-image: url("../assets/images/icons/location.svg");
+  background-image: url("@/assets/images/icons/location.svg");
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon {
-  background-image: url("../assets/images/icons/arrows-expand.svg");
+  background-image: url("@/assets/images/icons/arrows-expand.svg");
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-shrink .mapboxgl-ctrl-icon {
-  background-image: url("../assets/images/icons/arrows-shrink.svg");
+  background-image: url("@/assets/images/icons/arrows-shrink.svg");
 }
 
 .mapboxgl-ctrl-group button + button {
@@ -231,48 +241,35 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.marker .marker-active:after {
-  background: rgb(12, 16, 60);
+.marker.marker-active:after {
+  background: rgba(12, 16, 60, 1);
 }
+
 .marker:hover:before {
   opacity: 0.4;
 }
+
 .marker:before,
 .marker:after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  --tw-translate-x: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  --tw-translate-y: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
-    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
-    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  transform: translateX(-50%) translateY(-50%);
   border-radius: 9999px;
 }
 
 .marker:before {
-  background-color: #6b7280;
-  opacity: 0.1;
-  width: 3rem;
-  height: 3rem;
-}
-.marker .marker-active:before {
-  background-color: #6b7280;
+  background-color: rgba(107, 114, 128, 1);
   opacity: 0.1;
   width: 3rem;
   height: 3rem;
 }
 
 .marker:after {
-  background-color: #111827;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  background-color: rgba(17, 24, 39, 1);
+  border-width: 3px;
+  border-color: rgba(255, 255, 255, 1);
   width: 1.25rem;
   height: 1.25rem;
   border-color: #ffffff;
