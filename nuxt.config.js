@@ -7,7 +7,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "awesome-mappy",
+    title: "Awesome Mappy",
     htmlAttrs: {
       lang: "en",
     },
@@ -58,8 +58,7 @@ export default {
   },
 
   env: {
-    applicationId: process.env.APPLICATION_ID || "DZW1D4VA0D",
-    adminApiKey:
-      process.env.ADMIN_API_KEY || "3209f0f431a6c4f8ba29e66ba0d446b8",
+    applicationId: process.env.APPLICATION_ID,
+    adminApiKey: process.env.ADMIN_API_KEY,
   },
 };
