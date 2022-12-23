@@ -50,4 +50,15 @@ export default {
       },
     },
   },
+
+  publicRuntimeConfig: {
+    APPLICATION_SECRET: process.env.APPLICATION_ID,
+    ADMIN_SECRET: process.env.ADMIN_API_KEY,
+  },
+
+  env: {
+    applicationId: process.env.APPLICATION_ID || "DZW1D4VA0D",
+    adminApiKey:
+      process.env.ADMIN_API_KEY || "3209f0f431a6c4f8ba29e66ba0d446b8",
+  },
 };
