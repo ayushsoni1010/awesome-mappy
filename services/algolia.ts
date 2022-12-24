@@ -8,8 +8,8 @@ const algoliaClient = algoliaSearch(applicationId, adminKey);
 
 const algoliaHelper = algoliaSearchHelper(algoliaClient, "people", {
   disjunctiveFacets: ["city", "name", "country", "company"],
-  hitsPerPage: 100,
-  // maxValuesPerFacet: 500,
+  hitsPerPage: 400,
+  maxValuesPerFacet: 500,
   attributesToRetrieve: [
     "id",
     "name",
