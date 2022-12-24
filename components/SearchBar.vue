@@ -9,7 +9,7 @@
       @submit.prevent
     >
       <input
-        class="w-full h-full pl-32 bg-transparent outline-none text-2xl placeholder-gray-300"
+        class="w-full h-full pl-32 bg-transparent outline-none text-lg placeholder-gray-300"
         type="search"
         :placeholder="placeholder"
         autocomplete="off"
@@ -25,7 +25,7 @@
         title="Submit the search query"
         class="absolute top-1/2 w-28 h-full flex justify-center items-center transform -translate-y-1/2 hover:bg-gray-100 transition-colors focus:outline-none left-0"
       >
-        <SearchIcon class="w-6 h-6 fill-current text-gray-400" />
+        <SearchIcon class="w-4 h-4 fill-current text-gray-400" />
       </button>
 
       <button
@@ -36,6 +36,7 @@
       >
         <CloseIcon class="icon" />
       </button>
+      <ResultList :startString="query" v-if="query.length > 0" />
     </form>
   </div>
 </template>

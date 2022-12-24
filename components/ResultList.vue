@@ -1,12 +1,14 @@
 <template>
-  <section class="relative gradient-overflow">
-    <div class="h-full pl-8 pr-8 pt-8 overflow-auto" ref="scrollEl">
+  <section
+    class="absolute h-64 left-8 top-10 z-20 bg-gray-200 overflow-x-auto rounded-xl"
+  >
+    <div class="pl-4 pr-4 pt-4" ref="scrollEl">
       <ResultStats class="ml-4 mb-2" />
 
       <transition-group
         name="result-list"
         tag="ol"
-        class="grid grid-cols-1 gap-2 relative"
+        class="grid grid-cols-1 relative"
       >
         <li
           v-for="(item, i) in items"
@@ -41,7 +43,12 @@ export default defineComponent({
     ResultStats,
     Pagination,
   },
-
+  props: {
+    startString: String,
+  },
+  provide() {
+    console.log(this.startString,33333)
+  },
   setup() {
     const algoliaHelper = getAlgoliaHelper();
 

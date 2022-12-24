@@ -1,41 +1,28 @@
 <template>
   <button
-    class="w-full hover:bg-gray-100 transition-colors rounded-xl p-4 focus:outline-none"
+    class="w-fit hover:bg-gray-100 transition-colors rounded-xl p-2 focus:outline-none"
     @click="onClick"
   >
-    <div class="flex flex-col text-left">
-      <figure
-        class="h-auto w-full rounded-xl overflow-hidden aspect-w-16 aspect-h-10 shadow-md bg-gray-100"
-        :class="{ 'animate-pulse': !loaded }"
-      >
-        <img
-          :src="item.image_url"
-          :alt="item.name"
-          class="object-cover w-full h-full opacity-0 transition-opacity"
-          :class="{ 'opacity-100': loaded }"
-          @load="loaded = true"
-        />
-      </figure>
-
-      <div class="mt-5 flex flex-col space-y-1">
-        <div class="flex items-center space-x-2 text-sm">
-          <span
-            class="w-6 h-6 flex items-center justify-center text-cyan-dark bg-cyan-light rounded-lg"
-          >
-            <StarIcon class="w-3 h-3" />
-          </span>
-          <span class="font-medium text-cyan-dark">{{ item.city }}</span>
-
-          <div class="w-0.5 h-0.5 bg-black rounded-full"></div>
-
-          <!-- <div>
-            {{ item.reviews_count }} review{{
-              item.reviews_count > 1 ? "s" : ""
-            }}
-          </div> -->
+    <div
+      class="w-56 h-auto px-2 py-2 rounded-xl overflow-hidden shadow-md bg-gray-100"
+      :class="{ 'animate-pulse': !loaded }"
+    >
+      <div class="flex gap-2">
+        <div>
+          <img
+            :src="item.image_url"
+            :alt="item.name"
+            class="object-cover rounded-full opacity-0 transition-opacity"
+            :class="{ 'opacity-100': loaded }"
+            @load="loaded = true"
+          />
         </div>
-
-        <div class="text-sm text-gray-400">{{ item.skills }}</div>
+        <div class="text-sm font-medium text-left">
+          <p>{{ item.name }}</p>
+          <p class="text-xs text-gray-400">
+            {{ item.city }}
+          </p>
+        </div>
       </div>
     </div>
   </button>
@@ -53,12 +40,11 @@ export interface IResultItem {
   city: string;
   email: string;
   designation: string;
+  company: string;
   gender: string;
   image_url: string;
-  skills: string;
-  color: string;
-  date: string;
-  _geoloc: string;
+  lng: string;
+  lat: string;
 }
 
 export default defineComponent({
@@ -84,8 +70,26 @@ export default defineComponent({
 
     return { loaded, onClick };
   },
-  // mounted() {
-  //   console.log(this.$props.item);
-  // },
 });
 </script>
+
+<style>
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>
