@@ -7,22 +7,21 @@ const adminKey: any = process.env.adminApiKey;
 const algoliaClient = algoliaSearch(applicationId, adminKey);
 
 const algoliaHelper = algoliaSearchHelper(algoliaClient, "people", {
-  disjunctiveFacets: ["city", "username", "skills"],
-  hitsPerPage: 7,
-  maxValuesPerFacet: 20,
+  disjunctiveFacets: ["city", "name", "country", "company"],
+  hitsPerPage: 100,
+  // maxValuesPerFacet: 500,
   attributesToRetrieve: [
     "id",
     "name",
-    "username",
     "city",
     "email",
     "designation",
     "gender",
     "image_url",
-    "skills",
-    "color",
-    "date",
-    "_geoloc",
+    "company",
+    "country",
+    "lng",
+    "lat",
   ],
 });
 
