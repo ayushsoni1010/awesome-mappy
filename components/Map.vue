@@ -24,9 +24,6 @@ export default defineComponent({
   setup() {
     const algoliaHelper = getAlgoliaHelper();
 
-    const popupEl = ref();
-    const currentPopupItem = ref({});
-
     let hits: any = [];
     let map: Map;
     let lastClickedMarker: Element;
@@ -51,15 +48,6 @@ export default defineComponent({
         zoom: 5,
         offset: [0, -600],
       });
-    };
-
-    const updatePopup = (marker: Marker) => {
-      if (popupEl.value) {
-        popup
-          .setLngLat(marker.getLngLat())
-          .setDOMContent(popupEl.value.$el)
-          .addTo(map);
-      }
     };
 
     const removePopup = () => {
@@ -118,12 +106,10 @@ export default defineComponent({
     };
 
     const onMarkerClick = (marker: Marker, hit: any) => {
-      currentPopupItem.value = hit;
       MapStore.updateObjectID(hit.id);
 
       updateMarkerState(marker);
       flyToMarker(marker);
-      updatePopup(marker);
     };
 
     const onResult = ({ results }: { results: SearchResults }) => {
@@ -156,8 +142,6 @@ export default defineComponent({
 
       algoliaHelper.on("result", onResult);
     });
-
-    return { popupEl, currentPopupItem };
   },
 });
 </script>
