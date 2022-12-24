@@ -42,6 +42,8 @@ export default defineComponent({
 
     const markers: Marker[] = [];
     const popup: Popup = new mapboxgl.Popup({
+      closeOnClick: false,
+      closeButton: false,
       offset: 12,
       maxWidth: "200px",
     });
@@ -58,7 +60,7 @@ export default defineComponent({
       map.flyTo({
         center: marker.getLngLat(),
         zoom: 15,
-        offset: [0, -700],
+        offset: [0, -600],
       });
     };
 
@@ -135,7 +137,6 @@ export default defineComponent({
         container: "map",
         style: "mapbox://styles/swadon/ckkvdmhh735l418mhd4re0bse",
         zoom: 15,
-        center: [78.635735, 22.554967],
         scrollZoom: true,
       });
 
@@ -170,6 +171,8 @@ export default defineComponent({
 .mapboxgl-popup-content {
   border-radius: 0.75rem;
   padding: 1rem;
+  margin-top: -27.5rem;
+  margin-left: -1.5em;
 }
 
 .mapboxgl-ctrl-group:not(:empty) {
@@ -242,7 +245,7 @@ export default defineComponent({
 }
 
 .marker.marker-active:after {
-  background: rgba(12, 16, 60, 1);
+  background: rgba(41, 199, 185, 1);
 }
 
 .marker:hover:before {
