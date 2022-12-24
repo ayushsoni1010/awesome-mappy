@@ -1,13 +1,10 @@
 <template>
-  <div class="py-8 pl-8">
+  <div class="py-8 px-8">
     <div
+      style="height: 85vh !important"
       id="map"
-      class="w-full h-full rounded-xl overflow-hidden transform"
+      class="w-full rounded-xl overflow-hidden transform"
     ></div>
-
-    <template v-show="false">
-      <MapPopup :item="currentPopupItem" ref="popupEl" />
-    </template>
   </div>
 </template>
 
@@ -17,15 +14,9 @@ import mapboxgl, { LngLatLike, Map, Marker, Popup } from "mapbox-gl";
 import { SearchResults } from "algoliasearch-helper";
 import { getAlgoliaHelper } from "@/services/algolia";
 import MapStore from "@/store/MapStore";
-import MapPopup from "@/components/MapPopup.vue";
 
 export default defineComponent({
   name: "MapBox",
-
-  components: {
-    MapPopup,
-  },
-
   provide() {
     mapboxgl.accessToken = this.$config.MAPBOX_SECRET;
   },
@@ -33,7 +24,7 @@ export default defineComponent({
   setup() {
     const algoliaHelper = getAlgoliaHelper();
 
-    const popupEl = ref<typeof MapPopup>();
+    const popupEl = ref();
     const currentPopupItem = ref({});
 
     let hits: any = [];
@@ -44,8 +35,6 @@ export default defineComponent({
     const popup: Popup = new mapboxgl.Popup({
       closeOnClick: false,
       closeButton: false,
-      offset: 12,
-      maxWidth: "200px",
     });
 
     watch(
@@ -59,7 +48,7 @@ export default defineComponent({
     const flyToMarker = (marker: Marker) => {
       map.flyTo({
         center: marker.getLngLat(),
-        zoom: 15,
+        zoom: 5,
         offset: [0, -600],
       });
     };
@@ -89,11 +78,22 @@ export default defineComponent({
       if (!hits.length) return;
 
       hits.forEach((hit: any) => {
-        const hitCoords: LngLatLike = [hit._geoloc.lng, hit._geoloc.lat];
+        const hitCoords: LngLatLike = [hit.lng, hit.lat];
 
         const el = document.createElement("div");
         el.classList.add("marker");
+        el.innerHTML = `<div
+    class="w-44 h-auto p-2 pl-3 rounded-xl overflow-hidden shadow-md bg-gray-100"
+  >
+    <div class="text-sm font-medium">
+      <p>${hit?.name}</p>
+      <p class="text-xs text-gray-400 mt-1">
+        ${hit?.designation}
+      </p>
+    </div>
+  </div>`;
 
+        // Custom marker element
         const marker = new mapboxgl.Marker(el).setLngLat(hitCoords).addTo(map);
         hit.marker = marker;
 
@@ -135,7 +135,7 @@ export default defineComponent({
     onMounted(() => {
       map = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/swadon/ckkvdmhh735l418mhd4re0bse",
+        style: "mapbox://styles/mapbox/streets-v11",
         zoom: 15,
         scrollZoom: true,
       });
@@ -171,11 +171,9 @@ export default defineComponent({
 .mapboxgl-popup-content {
   border-radius: 0.75rem;
   padding: 1rem;
-  margin-top: -27.5rem;
-  margin-left: -1.5em;
 }
 
-.mapboxgl-ctrl-group:not(:empty) {
+/* .mapboxgl-ctrl-group:not(:empty) {
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
     0 2px 4px -2px var(--tw-shadow-color);
@@ -183,20 +181,20 @@ export default defineComponent({
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   border-radius: 0.75rem;
   padding: 0.5rem;
-}
+} */
 
-.mapboxgl-ctrl-group button {
+/* .mapboxgl-ctrl-group button {
   width: 2rem;
   height: 2rem;
   border-radius: 0.375rem;
-}
+} */
 
-.mapboxgl-ctrl-group button:focus {
+/* .mapboxgl-ctrl-group button:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-}
+} */
 
-.mapboxgl-ctrl-group button:focus:first-child,
+/* .mapboxgl-ctrl-group button:focus:first-child,
 .mapboxgl-ctrl-group button:focus:last-child,
 .mapboxgl-ctrl-group button:focus:only-child {
   border-radius: 0.375rem;
@@ -225,14 +223,16 @@ export default defineComponent({
 .mapboxgl-ctrl-group button + button {
   border-style: none;
 }
+
 .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl {
   margin-bottom: 0.75rem;
   margin-left: 1.5rem;
 }
+
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
   margin-top: 1.5rem;
   margin-right: 1.5rem;
-}
+} */
 
 .mapboxgl-ctrl-attrib {
   display: none;
@@ -262,7 +262,7 @@ export default defineComponent({
   border-radius: 9999px;
 }
 
-.marker:before {
+/* .marker:before {
   background-color: rgba(107, 114, 128, 1);
   opacity: 0.1;
   width: 3rem;
@@ -276,5 +276,5 @@ export default defineComponent({
   width: 1.25rem;
   height: 1.25rem;
   border-color: #ffffff;
-}
+} */
 </style>
